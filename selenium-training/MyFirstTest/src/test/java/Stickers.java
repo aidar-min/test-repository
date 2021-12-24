@@ -29,7 +29,7 @@ public class Stickers {
     public void setup() {
         driver.get("http://localhost/litecart/en/");
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        List<WebElement> products = driver.findElements(By.xpath("//li[starts-with(@class,'product')]"));
+        List<WebElement> products = driver.findElements(By.cssSelector("ul.products li.product"));
         for(WebElement e : products){
             Assert.assertEquals( e.findElements(By.className("sticker")).size(), 1);
         }
