@@ -12,8 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
 
-public class SortingCountriesGeozones {
+
+public class SortingCountriesGeozones<string> {
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -29,18 +31,19 @@ public class SortingCountriesGeozones {
 
     @Test
     // ввод логина / пароля на форме авторизации
-    public <var> void myFirstTest() {
+    public <string> void myFirstTest() {
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
 
+        // а) проверяет, что страны расположенных в алфавитном порядке
         List<WebElement> listCountries = driver.findElements(By.cssSelector("tr.row td a:not([title=Edit])"));
         List<String> Countries = new ArrayList<>();
         List<String> textContents = new ArrayList<>();
 
         for (WebElement listCountry : listCountries) {
-            var textContent = (var) listCountry.getAttribute("textContent");
+            String textContent = (String) listCountry.getAttribute("textContent");
             Countries.add((String) textContent);
             textContents.add((String) textContent);
         }
@@ -50,6 +53,7 @@ public class SortingCountriesGeozones {
             System.out.println("sorting of countries is correct");
         }
 
+        // б) для тех стран, у которых количество зон отлично от нуля -- открывает страницу этой страны и там проверяет, что геозоны расположены в алфавитном порядке
 
         List<WebElement> countryRow = driver.findElements(By.cssSelector("tr.row"));
         for (int i = 2; i <= countryRow.size(); i++) {
@@ -57,28 +61,28 @@ public class SortingCountriesGeozones {
 
                 driver.findElement(By.cssSelector(" tr:nth-child("+i+") > td:nth-child(5)> a ")).click();
 
-                List<WebElement> listZones = driver.findElements(By.cssSelector("td:nth-child(3)>input[name^='zones']"));
+                List<WebElement> listZones = driver.findElements(By.cssSelector("h2"));
                 List<String> namesZones = new ArrayList<>();
                 List<String> textZones = new ArrayList<>();
                 for (WebElement listZona : listZones) {
-                    var textZona = (var) listZona.getAttribute("value");
+                    String textZona = (String) listZona.getAttribute("value");
                     namesZones.add((String) textZona);
                     textZones.add((String) textZona);
                 }
                 Collections.sort(namesZones);
                 if (namesZones.equals(textZones)==true){
                     System.out.println("sorting is correct");
+
                 }
                 driver.get("http://localhost/litecart/admin/?app=countries&doc=countries");
             }
         }
     }
 
-
     @After
     public void stop() {
+        System.out.println("Test is ended");
         driver.quit();
         driver = null;
     }
-
 }
