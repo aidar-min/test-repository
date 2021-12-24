@@ -13,26 +13,21 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Stickers {
-    private WebDriver driver;
-    private WebDriverWait wait;
+    private static WebDriver driver;
 
 
     @Before
     public void start() {
-        driver = new ChromeDriver();
-        //ждем 10 секунд, чтобы найти элемент
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        wait = new WebDriverWait(driver, 10);
+        System.setProperty("webdriver.chrome.driver", "C:\\auto\\chromedriver.exe");
+        driver = new ChromeDriver(); //вызов браузера
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        System.out.println("Test is started");
 
     }
 
     @Test
-    // ввод логина / пароля на форме авторизации
-    public void myFirstTest() {
-        driver.navigate().to("http://localhost/litecart/admin/");
-        driver.findElement(By.name("username")).sendKeys("admin");
-        driver.findElement(By.name("password")).sendKeys("admin");
-        driver.findElement(By.name("login")).click();
+    public void setup() {
+        driver.get("http://localhost/litecart/en/");
         WebDriverWait wait = new WebDriverWait(driver, 10);
         List<WebElement> products = driver.findElements(By.xpath("//li[starts-with(@class,'product')]"));
         for(WebElement e : products){
