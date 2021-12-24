@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,21 +21,21 @@ public class CheckZones {
     public void start() {
         driver = new ChromeDriver();
         //ждем 20 секунд, чтобы найти элемент
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        wait = new WebDriverWait(driver, 20);
+        driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
+        wait = new WebDriverWait(driver, 40);
 
     }
 
     @Test
     // ввод логина / пароля на форме авторизации
-    public <var> void myFirstTest() {
-        driver.navigate().to ("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
+    public <string> void myFirstTest() {
+        driver.navigate().to("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
 
-        for (int i = 2; i <= driver.findElements(By.cssSelector("tr.row")).size()+1; i++) {
-            driver.findElement(By.cssSelector("tr:nth-child("+i+") > td:nth-child(3)>a")).click();
+        for (int i = 2; i <= driver.findElements(By.cssSelector("tr.row")).size() + 1; i++) {
+            driver.findElement(By.cssSelector("tr:nth-child(" + i + ") > td:nth-child(3)>a")).click();
 
             List<WebElement> listZones = driver.findElements(By.cssSelector("td:nth-child(3)>select[name^='zones']"));
             List<String> SortZones = new ArrayList<>();
@@ -44,17 +43,18 @@ public class CheckZones {
 
             for (WebElement listZona : listZones) {
 
-                if (listZona.isSelected() == true)
-                {
-                    var textZona = (var) listZona.getAttribute("text");
+                if (listZona.isSelected() == true) {
+                    String textZona = (String) listZona.getAttribute("text");
                     SortZones.add((String) textZona);
                     Zones.add((String) textZona);
                 }
 
             }
-            Collections.sort(SortZones);
-            if (SortZones.equals(Zones)==true){
-                System.out.println("sorting is correct");
+            if (SortZones.size() != 0) {
+                Collections.sort(SortZones);
+                if (SortZones.equals(Zones) == true) {
+                    System.out.println("sorting is correct");
+                }
             }
             driver.get("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
         }
