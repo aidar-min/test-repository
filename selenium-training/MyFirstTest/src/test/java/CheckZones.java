@@ -20,7 +20,7 @@ public class CheckZones {
     @Before
     public void start() {
         driver = new ChromeDriver();
-        //ждем 20 секунд, чтобы найти элемент
+        //ждем 40 секунд, чтобы найти элемент
         driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 40);
 
