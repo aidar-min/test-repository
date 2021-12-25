@@ -6,9 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.concurrent.TimeUnit;
-
+import static org.junit.Assert.assertEquals;
 public class CorrectProductPage {
 
 
@@ -20,7 +19,7 @@ public class CorrectProductPage {
     public void testChrome() {
         System.setProperty("webdriver.chrome.driver", "C:\\auto\\chromedriver.exe");
         driver = new ChromeDriver(); //вызов браузера
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
         check();
     }
 
@@ -28,7 +27,7 @@ public class CorrectProductPage {
     public void testFirefox() {
         System.setProperty("webdriver.gecko.driver", "C:\\auto\\geckodriver.exe");
         driver = new FirefoxDriver(); //вызов браузера
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
         check();
     }
 
@@ -56,26 +55,26 @@ public class CorrectProductPage {
         String OldPriceProductPage = ProductPage.findElement(By.xpath("//s")).getAttribute("textContent"); //old price - Product Page
         String NewPriceProductPage = ProductPage.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getAttribute("textContent"); //new price - Product Page
 
-        String VarOldPriceProductPageColor = ProductPage.findElement(By.xpath("//s")).getCssValue("color"); // color- #666 OR #777- Product Page
-        String VarNewPriceProductPageColor = ProductPage.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getCssValue("color"); //color- #c00 - Product Page
-        String VarOldProductPageFontSize = ProductPage.findElement(By.xpath("//s")).getCssValue("font-size");
-        String VarNewProductPageFontSize = ProductPage.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getCssValue("font-size");
+               String VarOldPriceProductPageColor = ProductPage.findElement(By.xpath("//s")).getCssValue("color"); // color- #666 OR #777- Product Page
+               String VarNewPriceProductPageColor = ProductPage.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getCssValue("color"); //color- #c00 - Product Page
+               String VarOldProductPageFontSize = ProductPage.findElement(By.xpath("//s")).getCssValue("font-size");
+               String VarNewProductPageFontSize = ProductPage.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getCssValue("font-size");
 
 
-        // а-name
-        NameCampaign.equals(NameProductPage);
-        // б-old and new price
-        OldPriceMain.equals(OldPriceProductPage);
-        NewPriceMain.equals(NewPriceProductPage);
-        // в-old-gray and strikethrough "s"
-        checkColorGrey(VarOldPriceMainColor, driver);
-        checkColorGrey(VarOldPriceProductPageColor, driver);
-        // г-new oily- "strong" and red
-        checkColorRed(VarNewPriceMainColor, driver);
-        checkColorRed(VarNewPriceProductPageColor, driver);
-        // д-new larger than normal
-        checkFontSize(VarOldMainFontSize,VarNewMainFontSize);
-        checkFontSize(VarOldProductPageFontSize,VarNewProductPageFontSize);
+               // а-name
+               assertEquals(NameCampaign, NameProductPage);
+               // б-old and new price
+               assertEquals(OldPriceMain, OldPriceProductPage);
+               assertEquals(NewPriceMain, NewPriceProductPage);
+               // в-old-gray and strikethrough "s"
+               checkColorGrey(VarOldPriceMainColor, driver);
+               checkColorGrey(VarOldPriceProductPageColor, driver);
+               // г-new oily- "strong" and red
+               checkColorRed(VarNewPriceMainColor, driver);
+               checkColorRed(VarNewPriceProductPageColor, driver);
+               // д-new larger than normal
+               checkFontSize(VarOldMainFontSize, VarNewMainFontSize);
+               checkFontSize(VarOldProductPageFontSize, VarNewProductPageFontSize);
 
 
     }
