@@ -37,8 +37,8 @@ public class CorrectProductPage {
         //characteristics on the main page
         WebElement CampaignsOne = driver.findElement(By.xpath("//*[@id=\"box-campaigns\"]/div/ul/li[1]"));
 
-        String NameCampaign = CampaignsOne.findElement(By.xpath("//div[@class=\"name\"]")).getAttribute("textContent"); //name-Yellow Duck - Main Page
-        String OldPriceMain = CampaignsOne.findElement(By.xpath("//s")).getAttribute("textContent"); //old price - Main Page
+        String NameCampaign = CampaignsOne.findElement(By.xpath(".//div[@class=\"name\"]")).getAttribute("textContent"); //name-Yellow Duck - Main Page
+               String OldPriceMain = CampaignsOne.findElement(By.xpath("//s")).getAttribute("textContent"); //old price - Main Page
         String NewPriceMain = CampaignsOne.findElement(By.xpath("//strong[@class=\"campaign-price\"]")).getAttribute("textContent"); //new price - Main Page
 
         String VarOldPriceMainColor = CampaignsOne.findElement(By.xpath("//s")).getCssValue("color"); // color- #666 OR #777
