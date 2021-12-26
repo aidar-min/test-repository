@@ -36,7 +36,7 @@ public class NewCustomers {
 
     @Test
     public void Task11Test() throws InterruptedException {
-        driver.get("http://localhost/litecart/en/");
+        driver.get("https://litecart.stqa.ru/en/");
         driver.findElement(By.cssSelector("#box-account-login tr:nth-child(5) a")).click();
         WebElement createAccount = driver.findElement(By.cssSelector("#create-account"));
 //Entering values
