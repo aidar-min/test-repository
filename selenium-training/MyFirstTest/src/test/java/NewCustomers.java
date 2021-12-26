@@ -52,15 +52,16 @@ public class NewCustomers {
         driver.findElement(By.cssSelector("input[type=email]")).sendKeys(email);
 
 //Entering values
+        //setField(createAccount, "email", email);
         setField(createAccount, "phone", phone);
         setField(createAccount, "password", password);
         setField(createAccount, "confirmed_password", password);
 
 //Create an account
         createAccount.findElement(By.cssSelector("button[name=create_account]")).click();
-        driver.findElement(By.cssSelector("input[name=password]")).sendKeys(password);
+        /*driver.findElement(By.cssSelector("input[name=password]")).sendKeys(password);
         driver.findElement(By.cssSelector("input[name=confirmed_password]")).sendKeys(password);
-        driver.findElement(By.cssSelector("button[type=submit]")).click();
+        driver.findElement(By.cssSelector("button[type=submit]")).click();*/
 
 //logout
         logout();
