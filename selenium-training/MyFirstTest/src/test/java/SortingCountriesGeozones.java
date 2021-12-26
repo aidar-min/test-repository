@@ -6,16 +6,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
 
-
-public class SortingCountriesGeozones<string> {
+public class SortingCountriesGeozones {
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -31,53 +28,105 @@ public class SortingCountriesGeozones<string> {
 
     @Test
     // ввод логина / пароля на форме авторизации
-    public <string> void myFirstTest() {
+    public void myFirstTest() {
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
 
-        // а) проверяет, что страны расположенных в алфавитном порядке
-        List<WebElement> listCountries = driver.findElements(By.cssSelector("tr.row td a:not([title=Edit])"));
-        List<String> Countries = new ArrayList<>();
-        List<String> textContents = new ArrayList<>();
+        System.out.println("1.a - проверить, что страны расположены в алфавитном порядке");
+        this.checkSortCountriesList();
+        System.out.println("1.b - для тех стран, у которых количество зон отлично от нуля -- открыть страницу этой страны и там проверить, что зоны расположены в алфавитном порядке");
+        this.checkSortZonesList();
 
-        for (WebElement listCountry : listCountries) {
-            String textContent = (String) listCountry.getAttribute("textContent");
-            Countries.add((String) textContent);
-            textContents.add((String) textContent);
+    }
+
+    public void checkSortCountriesList() {
+
+        int indexColumnName = this.getNumberColumn("Name");
+        List<WebElement> countries = driver.findElements(By.xpath("//table[@class='dataTable']//td[" + indexColumnName + "]"));
+
+        ArrayList<String> getCountiesList = new ArrayList();
+        ArrayList<String> sortCountiesList = new ArrayList();
+
+        for (int i = 0; i < countries.size(); i++) {
+            WebElement country = countries.get(i);
+            String countryName = country.getText();
+            getCountiesList.add(countryName);
         }
-        Collections.sort(Countries);
+        System.out.println("getCountiesList = " + getCountiesList);
 
-        if (Countries.equals(textContents)==true) {
-            System.out.println("sorting of countries is correct");
+        for (String getCountry : getCountiesList) {
+            sortCountiesList.add(getCountry);
         }
+        Collections.sort(sortCountiesList);
+        System.out.println("sortCountiesList = " + sortCountiesList);
 
-        // б) для тех стран, у которых количество зон отлично от нуля -- открывает страницу этой страны и там проверяет, что геозоны расположены в алфавитном порядке
+        if (sortCountiesList.equals(getCountiesList)) {
+            System.out.println("SUCCESS: Список отсортирован в алфавитном порядке");
+        } else {
+            System.out.println("ERROR: Список не в алфавитном порядке");
+        }
+    }
 
-        List<WebElement> countryRow = driver.findElements(By.cssSelector("tr.row"));
-        for (int i = 2; i <= countryRow.size(); i++) {
-            if (!driver.findElement(By.cssSelector("tr:nth-child("+i+") > td:nth-child(6)")).getText().equals("0")) {
+    public void checkSortZonesList() {
+        int indexColumnZones = this.getNumberColumn("Zones");
 
-                driver.findElement(By.cssSelector(" tr:nth-child("+i+") > td:nth-child(5)> a ")).click();
+        List quantityZonesList = driver.findElements(By.xpath("//table[@class='dataTable']//td[" + indexColumnZones + "]"));
 
-                List<WebElement> listZones = driver.findElements(By.cssSelector("h2"));
-                List<String> namesZones = new ArrayList<>();
-                List<String> textZones = new ArrayList<>();
-                for (WebElement listZona : listZones) {
-                    String textZona = (String) listZona.getAttribute("value");
-                    namesZones.add((String) textZona);
-                    textZones.add((String) textZona);
+        for (int z = 0; z < quantityZonesList.size(); z++) {
+            int index = z + 1;
+            WebElement countriesZone = driver.findElement(By.xpath("//tr[" + index + "]//td[" + indexColumnZones + "]"));
+            String quantityZoneCountry = countriesZone.getText();
+            int n = Integer.parseInt(quantityZoneCountry);
+
+            if (n > 0) {
+                WebElement countryOfZones = driver.findElement(By.xpath("//tr[" + index + "]//a[contains(@href,'edit_country') and not (contains(@title,'Edit'))]"));
+                countryOfZones.click();
+
+                List countryZonesList = driver.findElements(By.xpath("//input[contains(@name,'zones')][contains(@name,'name')]"));
+                ArrayList<String> getZonesList = new ArrayList();
+                ArrayList<String> sortZonesList = new ArrayList();
+
+                for (int j = 0; j < countryZonesList.size(); j++) {
+                    WebElement countryZone = (WebElement) countryZonesList.get(j);
+                    String countryZoneName = countryZone.getAttribute("value");
+                    getZonesList.add(countryZoneName);
                 }
-                Collections.sort(namesZones);
-                if (namesZones.equals(textZones)==true){
-                    System.out.println("sorting is correct");
+                System.out.println("getZonesList  = " + getZonesList);
 
+                for (String getZone : getZonesList) {
+                    sortZonesList.add(getZone);
                 }
-                driver.get("http://localhost/litecart/admin/?app=countries&doc=countries");
+
+                Collections.sort(sortZonesList);
+                System.out.println("sortZonesList  = " + sortZonesList);
+
+                if (sortZonesList.equals(getZonesList)) {
+                    System.out.println("SUCCESS: Список отсортирован в алфавитном порядке");
+                } else {
+                    System.out.println("ERROR: Список не в алфавитном порядке");
+                }
+                driver.navigate().back();
             }
         }
     }
+
+
+    public int getNumberColumn(String name) {
+        List<WebElement> tableHeader = driver.findElements(By.xpath("//table[@class='dataTable']//th"));
+        int index = 1;
+        for (WebElement header : tableHeader) {
+            String columnName = header.getText();
+            if (columnName.equalsIgnoreCase(name)) {
+                return index;
+            } else {
+                index++;
+            }
+        }
+        return index;
+    }
+
 
     @After
     public void stop() {
