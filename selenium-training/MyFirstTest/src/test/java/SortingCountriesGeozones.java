@@ -84,7 +84,7 @@ public class SortingCountriesGeozones {
                 WebElement countryOfZones = driver.findElement(By.xpath("//tr[" + index + "]//a[contains(@href,'edit_country') and not (contains(@title,'Edit'))]"));
                 countryOfZones.click();
 
-                List countryZonesList = driver.findElements(By.cssSelector("h2"));
+                List countryZonesList = driver.findElements(By.cssSelector("#table-zones input[type=hidden][name*=name]"));
                 ArrayList<String> getZonesList = new ArrayList();
                 ArrayList<String> sortZonesList = new ArrayList();
 
