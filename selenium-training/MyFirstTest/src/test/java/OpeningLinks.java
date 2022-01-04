@@ -3,13 +3,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 
 public class OpeningLinks {
     private static WebDriver driver;
@@ -39,7 +39,6 @@ public class OpeningLinks {
         String oldTab = driver.getWindowHandle(); //список открытых окон- главная страница с формой
         for (int i = 0; i < driver.findElements(By.xpath(Locator)).size(); i++) {
             driver.findElements(By.xpath(Locator)).get(i).click();
-            wait.until(presenceOfElementLocated(By.tagName("body")));
             ArrayList<String> newTab = new ArrayList<String>(driver.getWindowHandles());
             newTab.remove(oldTab);
             // переключить фокус на новую вкладку
