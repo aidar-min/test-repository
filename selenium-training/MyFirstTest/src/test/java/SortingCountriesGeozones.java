@@ -69,7 +69,7 @@ public class SortingCountriesGeozones {
         }
     }
 
-    public void checkSortZonesList() {
+    public <string> void checkSortZonesList() {
         int indexColumnZones = this.getNumberColumn("Zones");
 
         List quantityZonesList = driver.findElements(By.xpath("//table[@class='dataTable']//td[" + indexColumnZones + "]"));
@@ -84,20 +84,19 @@ public class SortingCountriesGeozones {
                 WebElement countryOfZones = driver.findElement(By.xpath("//tr[" + index + "]//a[contains(@href,'edit_country') and not (contains(@title,'Edit'))]"));
                 countryOfZones.click();
 
-                List countryZonesList = driver.findElements(By.cssSelector("#table-zones input[type=hidden][name*=name]"));
+                List countryZonesList = driver.findElements(By.xpath("//*[@id='remove-zone']/../../td[3]"));
                 ArrayList<String> getZonesList = new ArrayList();
                 ArrayList<String> sortZonesList = new ArrayList();
 
-                for (int j = 0; j < countryZonesList.size(); j++) {
-                    WebElement countryZone = (WebElement) countryZonesList.get(j);
+                for (int i = 0; i < countryZonesList.size(); i++) {
+                    WebElement countryZone = (WebElement) countryZonesList.get(i);
                     String countryZoneName = countryZone.getAttribute("value");
-                    getZonesList.add(countryZoneName);
+                    string ZonesList = (string) countryZoneName;
+                    String zona = countryZone.getAttribute("textContent");
+                    getZonesList.add(zona);
+                    sortZonesList.add(zona);
                 }
                 System.out.println("getZonesList  = " + getZonesList);
-
-                for (String getZone : getZonesList) {
-                    sortZonesList.add(getZone);
-                }
 
                 Collections.sort(sortZonesList);
                 System.out.println("sortZonesList  = " + sortZonesList);
