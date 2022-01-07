@@ -3,13 +3,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class OpeningLinks {
     private static WebDriver driver;
@@ -33,21 +34,32 @@ public class OpeningLinks {
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
 
-        driver.findElement(By.xpath("//*[@id=\"content\"]/div/a")).click();
-        String Locator = "//i[@class='fa fa-external-link']/parent::a";
-        wait.until(presenceOfElementLocated(By.xpath(Locator)));
-        String oldTab = driver.getWindowHandle(); //список открытых окон- главная страница с формой
-        for (int i = 0; i < driver.findElements(By.xpath(Locator)).size(); i++) {
-            driver.findElements(By.xpath(Locator)).get(i).click();
-            ArrayList<String> newTab = new ArrayList<String>(driver.getWindowHandles());
-            newTab.remove(oldTab);
-            // переключить фокус на новую вкладку
-            driver.switchTo().window(newTab.get(0));
-            driver.close();
-            // переключить фокус обратно на старую вкладку
-            driver.switchTo().window(oldTab);
-            wait.until(titleIs("Add New Country | My Store"));
+        driver.findElement(By.xpath("//tr[@class='row'][1]//a[contains(@href,'edit_country') and (contains(@title,'Edit'))]")).click();
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//h1[contains(text(),' Edit Country')]"))));
+
+        List links = driver.findElements(By.xpath("//i[@class='fa fa-external-link']"));
+        for (int i = 0; i < links.size(); i++) {
+            WebElement link = (WebElement) links.get(i);
+            String originalWindows = driver.getWindowHandle();
+            Set<String> existingWindowsBefore = driver.getWindowHandles();
+
+            link.click();
+
+            wait.until(driver -> !driver.getWindowHandles().equals(existingWindowsBefore));
+            Set<String> existingWindowsAfter = driver.getWindowHandles();
+
+            Iterator<String> iterator = existingWindowsAfter.iterator();
+            while (iterator.hasNext()) {
+                String newWindow = iterator.next();
+                if (!originalWindows.equals(newWindow)) {
+                    driver.switchTo().window(newWindow);
+                    System.out.println(driver.switchTo().window(newWindow).getTitle());
+                    driver.close();
+                }
+            }
+            driver.switchTo().window(originalWindows);
         }
+
     }
 
     @After
