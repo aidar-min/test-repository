@@ -6,12 +6,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class CheckBrowserLogs {
     private WebDriver driver;
@@ -53,6 +57,11 @@ public class CheckBrowserLogs {
             driver.manage().logs().get("browser").forEach(l -> {
                 System.out.println(l);
                 Assert.assertTrue(l.equals(""));
+                LoggingPreferences prefs = new LoggingPreferences();
+                prefs.enable("browser", Level.ALL);
+                ChromeOptions options = new ChromeOptions();
+                options.setCapability(CapabilityType.LOGGING_PREFS, prefs);
+                driver = new ChromeDriver(options);
             });
             driver.navigate().back();
         }
